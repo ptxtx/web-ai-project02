@@ -9,6 +9,7 @@ import comitheima.service.EmpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -25,11 +26,11 @@ public class EmpServiceImpl implements EmpService {
 //        return new PageResult<Emp>(total,rows);
 //    }
     @Override
-    public PageResult<Emp> page(Integer page, Integer pageSize){
+    public PageResult<Emp> page(Integer page, Integer pageSize, String name, Integer gender, LocalDate begin, LocalDate end){
         //1.设置分页参数
         PageHelper.startPage(page,pageSize);
         //2.执行查询
-        List<Emp> empList = empMapper.list();
+        List<Emp> empList = empMapper.list(name,gender,begin,end);
 
         Page<Emp> p=(Page<Emp>) empList;
         return new PageResult<Emp>(p.getTotal(),p.getResult());
