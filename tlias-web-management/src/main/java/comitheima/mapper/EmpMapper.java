@@ -1,6 +1,7 @@
 package comitheima.mapper;
 
 import comitheima.pojo.Emp;
+import comitheima.pojo.EmpQueryParam;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -19,7 +20,10 @@ public interface EmpMapper {
 
 //        @Select("select e.*,d.name deptName from emp e left join dept d on e.dept_id = d.id " +
 //            "order by e.update_time desc")//Emp中不能封装d.name  所以得增加属性
-        public List<Emp> list(String name, Integer gender, LocalDate begin, LocalDate end);
+
+
+//        public List<Emp> list(String name, Integer gender, LocalDate begin, LocalDate end);
+   public List<Emp> list(EmpQueryParam eqp);
 
 
 
