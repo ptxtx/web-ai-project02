@@ -8,10 +8,7 @@ import comitheima.service.EmpService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -38,5 +35,11 @@ public class EmpController {
         log.info("分页查询:{}",eqp);
         PageResult<Emp> pageResult=empService.page(eqp);
         return Result.success(pageResult);
+    }
+    @PostMapping
+    public Result sava(@RequestBody Emp emp){//将前端给的JSON格式的数据封装到对象中
+        log.info("新增员工：{}",emp);
+        empService.save(emp);
+        return Result.success();
     }
 }

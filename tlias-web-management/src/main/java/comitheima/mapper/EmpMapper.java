@@ -2,8 +2,7 @@ package comitheima.mapper;
 
 import comitheima.pojo.Emp;
 import comitheima.pojo.EmpQueryParam;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,6 +23,12 @@ public interface EmpMapper {
 
 //        public List<Emp> list(String name, Integer gender, LocalDate begin, LocalDate end);
    public List<Emp> list(EmpQueryParam eqp);
+
+
+   @Options(useGeneratedKeys = true,keyProperty = "id")//插入成功后，将主键值回填到emp对象中
+   @Insert("insert into emp(username,name, gender, phone, job, salary, image, entry_date, dept_id, create_time, update_time)" +
+           "values(#{username},#{name},#{gender},#{phone},#{job},#{salary},#{image},#{entryDate},#{deptId},#{createTime},#{updateTime})")
+   public void insert(Emp emp);
 
 
 
