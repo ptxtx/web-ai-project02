@@ -7,6 +7,7 @@ import comitheima.mapper.EmpMapper;
 import comitheima.pojo.*;
 import comitheima.service.EmpLogService;
 import comitheima.service.EmpService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Service
 public class EmpServiceImpl implements EmpService {
     @Autowired
@@ -110,6 +112,18 @@ public class EmpServiceImpl implements EmpService {
             exprList.forEach(expr->expr.setEmpId(emp.getId()));//设定这段工作经历归属于哪个员工
             empExprMapper.insertBatch(exprList);
         }
+    }
+
+    @Override
+    public LoginInfo login(Emp emp){
+        //1.根据用户名和密码查询员工信息
+        Emp e=empMapper.selectByUsernameAndPassword(emp);
+        //2.判断 是否存在这个员工 存在，则组装登录成功信息。不存在，返回null
+        if(e!=null){
+            log.info("登录成功，员工信息：{}",e);
+            return new LoginInfo(e.getId(),e.getUsername(),e.getName(),null);//返回响应数据格式，LoginInfo
+        }
+        return null;
     }
 
 }

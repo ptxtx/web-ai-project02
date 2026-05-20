@@ -2,6 +2,7 @@ package comitheima.service;
 
 import comitheima.pojo.Emp;
 import comitheima.pojo.EmpQueryParam;
+import comitheima.pojo.LoginInfo;
 import comitheima.pojo.PageResult;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,4 +21,6 @@ public interface EmpService {
     Emp getInfo(Integer id);
 
     void update(Emp emp);
+
+    LoginInfo login(Emp emp);
 }

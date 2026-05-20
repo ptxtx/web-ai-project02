@@ -75,4 +75,14 @@
         select e.*,ee.id ee_id,ee.emp_id ee_empid,ee.begin ee_begin,ee.end ee_end,ee.company ee_company,ee.job ee_job
              from emp e left join emp_expr ee on e.id = ee.emp_id where e.id=#{id}
     </select>
+    <select id="countEmpJobData" resultType="java.util.Map">
+        select
+            (case when job=1 then '班主任' when job=2 then '讲师' when job=3 then '学工主管' when job=4 then '教研主管' when job=5 then '咨询师' end)pos,
+            count(*) num from emp group by job order by num
+    </select>
+    <select id="countEmpGenderData" resultType="java.util.Map">
+        select
+            (case when gender=1 then '男' when gender=2 then '女' end)name,
+            count(*) value from emp group by gender
+    </select>
 </mapper>
