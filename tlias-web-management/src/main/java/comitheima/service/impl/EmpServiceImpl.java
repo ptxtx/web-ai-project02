@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -76,6 +76,40 @@ public class EmpServiceImpl implements EmpService {
         }
 
 
+    }
+
+    @Transactional(rollbackFor ={ Exception.class})
+    @Override
+    public void delete(List<Integer> ids){
+        //1.批量删除员工的基本信息
+        empMapper.deleteByIds(ids);
+
+        //2.批量删除员工对应的员工入职信息
+        empExprMapper.deleteByEmpIds(ids);
+    }
+
+    @Override
+    public Emp getInfo(Integer id){
+        return empMapper.getById(id);
+    }
+
+    @Transactional(rollbackFor ={ Exception.class})
+    @Override
+    public void update(Emp emp){
+        emp.setUpdateTime(LocalDateTime.now());
+        empMapper.updateById(emp);
+
+        //2.根据ID修改员工的工作经历信息
+        //2.1 先删除原有的工作经历
+        empExprMapper.deleteByEmpIds(Arrays.asList(emp.getId()));//这里是把emp的id转换成list类型 因为之前写过delete方法，其形参为List<Integer>
+
+        //2.2 再添加这个员工新的工作经历
+        List<EmpExpr> exprList = emp.getExprList();
+        if(!CollectionUtils.isEmpty(exprList)){
+            //遍历集合，为empId赋值
+            exprList.forEach(expr->expr.setEmpId(emp.getId()));//设定这段工作经历归属于哪个员工
+            empExprMapper.insertBatch(exprList);
+        }
     }
 
 }

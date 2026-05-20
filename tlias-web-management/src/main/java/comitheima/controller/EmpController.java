@@ -11,6 +11,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 @RequestMapping("/emps")
 @RestController
@@ -42,4 +44,30 @@ public class EmpController {
         empService.save(emp);
         return Result.success();
     }
+
+    @DeleteMapping
+    public Result delete( @RequestParam List<Integer> ids){// 如果参数传递的是List集合，则形参需要RequestParam注解
+        log.info("批量删除员工：{}", ids);
+        empService.delete(ids);
+        return Result.success();
+    }
+
+    @GetMapping("/{id}")//代表查询
+    public Result getInfo(@PathVariable Integer id){//将路径的{id} 绑定给形参
+        log.info("查询员工id为：{}",id);
+        Emp emp=empService.getInfo(id);//返回emp 这样才能输出出来 响应数据
+        return Result.success(emp);
+    }
+
+    @PutMapping//修改员工
+    public Result update(@RequestBody Emp emp){
+        log.info("修改员工：{}",emp);
+        empService.update(emp);
+        return Result.success();
+    }
+
+
+
+
+
 }
