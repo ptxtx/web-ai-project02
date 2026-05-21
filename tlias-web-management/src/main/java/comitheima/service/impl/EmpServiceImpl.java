@@ -2,6 +2,7 @@ package comitheima.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import comitheima.Utils.JwtUtils;
 import comitheima.mapper.EmpExprMapper;
 import comitheima.mapper.EmpMapper;
 import comitheima.pojo.*;
@@ -15,7 +16,9 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -121,7 +124,12 @@ public class EmpServiceImpl implements EmpService {
         //2.判断 是否存在这个员工 存在，则组装登录成功信息。不存在，返回null
         if(e!=null){
             log.info("登录成功，员工信息：{}",e);
-            return new LoginInfo(e.getId(),e.getUsername(),e.getName(),null);//返回响应数据格式，LoginInfo
+            //生成jwt
+            Map<String,Object> claims = new HashMap<>();
+            claims.put("id",e.getId());
+            claims.put("username",e.getUsername());
+            String token = JwtUtils.generateToken(claims);
+            return new LoginInfo(e.getId(),e.getUsername(),e.getName(),token);//返回响应数据格式，LoginInfo
         }
         return null;
     }
