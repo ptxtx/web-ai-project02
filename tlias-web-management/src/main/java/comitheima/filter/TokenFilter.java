@@ -1,6 +1,8 @@
 package comitheima.filter;
 
+import comitheima.Utils.CurrentHolder;
 import comitheima.Utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
-//@WebFilter("/*")
+@WebFilter("/*")
 @Slf4j
 public class TokenFilter implements Filter {
     @Override
@@ -35,7 +37,11 @@ public class TokenFilter implements Filter {
         }
         //5.令牌存在，则解析令牌（校验），如果解析失败，返回错误信息（响应401状态码）
         try {
-            JwtUtils.parseToken(token);
+            Claims claims = JwtUtils.parseToken(token);//claims本质是map
+            Object o = claims.get("id");
+            Integer id = Integer.valueOf(o.toString());
+            CurrentHolder.setCurrentId(id);//存入ThreadLocal
+            log.info("当前登录员工id为：{}，将其存入ThreadLocal",id);
         } catch (Exception e) {
             resp.setStatus(401);
             return;
@@ -43,6 +49,10 @@ public class TokenFilter implements Filter {
         //6.校验通过则放行
         log.info("令牌解析成功，放行");
         chain.doFilter(request,response);
+
+
+        //7.删除ThreadLOcal中的数据
+        CurrentHolder.remove();
 
 
 

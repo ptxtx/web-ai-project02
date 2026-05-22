@@ -1,5 +1,6 @@
 package comitheima.controller;
 
+import comitheima.anno.Log;
 import comitheima.pojo.Dept;
 import comitheima.pojo.Result;
 import comitheima.service.DeptService;
@@ -25,6 +26,7 @@ public class DeptController {
        return Result.success(deptList);
     }
 
+    @Log
     @DeleteMapping("/depts")
     //删除需要接收请求参数 id
     public Result delete(HttpServletRequest  request){
@@ -36,6 +38,10 @@ public class DeptController {
         return Result.success();
     }
 
+    /*
+    新增
+     */
+    @Log
     @PostMapping("/depts")
     public Result add(@RequestBody Dept dept){
         log.info("添加部门数据"+dept);
@@ -51,7 +57,10 @@ public class DeptController {
         Dept dept=deptService.getById(deptId);
         return Result.success(dept);
     }
-
+    /*
+    修改
+     */
+    @Log
     @PutMapping("/depts")
     public Result update(@RequestBody Dept dept){
         log.info("修改部门数据"+dept);
